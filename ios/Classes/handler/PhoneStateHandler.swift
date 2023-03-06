@@ -24,11 +24,12 @@ class PhoneStateHandler: NSObject, FlutterStreamHandler, CXCallObserverDelegate{
         if call.isOutgoing == false && call.hasConnected == false && call.hasEnded == false {
             status = PhoneStateStatus.CALL_INCOMING
         } else if (call.isOutgoing == false && call.hasConnected == true && call.hasEnded == false)
-                    || (call.hasConnected == true && call.hasEnded == false && call.isOnHold == false) ||
-                    (call.isOutgoing == true && call.hasConnected == true && call.hasEnded == false){
+                    || (call.hasConnected == true && call.hasEnded == false && call.isOnHold == false) {
             status = PhoneStateStatus.CALL_STARTED
         } else if call.isOutgoing == false && call.hasEnded == true {
             status = PhoneStateStatus.CALL_ENDED
+        } else if call.isOutgoing == true && call.hasEnded == false {
+            status = PhoneStateStatus.CALL_STARTED
         } else if call.isOutgoing == true && call.hasEnded == true {
             status = PhoneStateStatus.CALL_ENDED
         } else {
