@@ -30,9 +30,9 @@ class PhoneStateHandler: NSObject, FlutterStreamHandler, CXCallObserverDelegate{
             status = PhoneStateStatus.CALL_ENDED
         } else if call.isOutgoing == true {
             status = PhoneStateStatus.CALL_STARTED
-        }
-
-        else {
+        } else if call.isOutgoing == true && call.hasEnded == true {
+            status = PhoneStateStatus.CALL_ENDED
+        } else {
             status = PhoneStateStatus.NOTHING
         }
         if(_eventSink != nil) { _eventSink!(status.rawValue) }
