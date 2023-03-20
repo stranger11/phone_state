@@ -26,7 +26,7 @@
         <receiver
             android:name="it.mainella.phone_state.receiver.PhoneStateReceiver"
             android:exported="true">
-            <intent-filter android:priority="999">
+            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
