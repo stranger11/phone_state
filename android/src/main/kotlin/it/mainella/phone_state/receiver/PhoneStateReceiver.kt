@@ -30,8 +30,9 @@ open class PhoneStateReceiver : BroadcastReceiver() {
             }
             @RequiresApi(Build.VERSION_CODES.M)
             object : Call.Callback() {
-                override fun onCallDestroyed(call: Call?) {
-                    status = PhoneStateStatus.CALL_ENDED
+                override fun onStateChanged(call: Call?, state: Int) {
+                    super.onStateChanged(call, state)
+                    println("PROF CALL STATE $state - ${call.toString()}")
                 }
             }
 
