@@ -19,19 +19,18 @@ import it.mainella.phone_state.utils.PhoneStateStatus
 
 open class PhoneStateReceiver : BroadcastReceiver() {
     var status: PhoneStateStatus = PhoneStateStatus.NOTHING;
-    @RequiresApi(Build.VERSION_CODES.R)
+
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onReceive(context: Context?, intent: Intent?) {
         try {
 
 
-            val manager = context?.getSystemService(TELECOM_SERVICE) as TelecomManager
-            if (manager.isInCall) {
-                status = PhoneStateStatus.CALL_STARTED
-            }
+            val manager = context?.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+
+
+            val callback = MyPhoneStateListener()
+            manager.registerTelephonyCallback({it.run()},callback )
           //  manager.isInCall
-
-
-
 
 //            TelephonyManager.EXTRA_FOREGROUND_CALL_STATE
 //
@@ -55,6 +54,23 @@ open class PhoneStateReceiver : BroadcastReceiver() {
 
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.S)
+    inner class MyPhoneStateListener : TelephonyCallback(), TelephonyCallback.CallStateListener {
+        override fun onCallStateChanged(state: Int) {
+            when (state) {
+                TelephonyManager.CALL_STATE_RINGING -> {
+
+                }
+
+                TelephonyManager.CALL_STATE_OFFHOOK -> {
+                    status = PhoneStateStatus.CALL_STARTED
+                }
+                TelephonyManager.CALL_STATE_IDLE -> {
+
+                }
+            }
         }
     }
 
