@@ -1,19 +1,10 @@
 package it.mainella.phone_state.receiver
 
-import android.app.NotificationManager
-import android.app.StatusBarManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
-import android.service.notification.StatusBarNotification
 import android.telecom.Call
-import android.telecom.CallRedirectionService
-import android.telecom.InCallService
-import android.telecom.PhoneAccountHandle
-import android.telephony.CellSignalStrengthWcdma
-import android.telephony.TelephonyCallback.CallStateListener
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresApi
 import it.mainella.phone_state.utils.PhoneStateStatus
