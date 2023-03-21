@@ -17,6 +17,7 @@ import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.annotation.RequiresApi
+import io.flutter.BuildConfig
 import io.flutter.view.AccessibilityBridge.Action
 import it.mainella.phone_state.utils.PhoneStateStatus
 
@@ -29,18 +30,16 @@ open class PhoneStateReceiver : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context?, intent: Intent?) {
         try {
-            val intentService = Intent(context, MyCallService::class.java)
-            context?.startService(intentService)
-
-            // var telecomManager = context?.getSystemService(TELECOM_SERVICE) as TelecomManager
-
-            //context.registerComponentCallbacks(TelecomCallCallback())
-            status = when (intent?.getStringExtra(TelephonyManager.EXTRA_STATE)) {
-                TelephonyManager.EXTRA_STATE_RINGING -> PhoneStateStatus.CALL_INCOMING
-                TelephonyManager.EXTRA_STATE_OFFHOOK -> PhoneStateStatus.CALL_STARTED
-                TelephonyManager.EXTRA_STATE_IDLE -> PhoneStateStatus.CALL_ENDED
-                else -> PhoneStateStatus.NOTHING
-            }
+            if (Build.BRAND == "Huawei") {
+                val intentService = Intent(context, MyCallService::class.java)
+                context?.startService(intentService)
+            } else
+                status = when (intent?.getStringExtra(TelephonyManager.EXTRA_STATE)) {
+                    TelephonyManager.EXTRA_STATE_RINGING -> PhoneStateStatus.CALL_INCOMING
+                    TelephonyManager.EXTRA_STATE_OFFHOOK -> PhoneStateStatus.CALL_STARTED
+                    TelephonyManager.EXTRA_STATE_IDLE -> PhoneStateStatus.CALL_ENDED
+                    else -> PhoneStateStatus.NOTHING
+                }
         } catch (e: Exception) {
             e.printStackTrace()
         }
