@@ -6,14 +6,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Build
 import android.telephony.TelephonyManager
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import it.mainella.phone_state.receiver.PhoneStateReceiver
+import it.mainella.phone_state.receiver.status
 import it.mainella.phone_state.utils.Constants
 
 class FlutterHandler(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -25,9 +28,10 @@ class FlutterHandler(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
 
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 receiver = object : PhoneStateReceiver() {
+                    @RequiresApi(Build.VERSION_CODES.M)
                     override fun onReceive(context: Context?, intent: Intent?) {
                         super.onReceive(context, intent)
-                        events?.success(receiver.status.toString())
+                        events?.success(status.toString())
                     }
                 }
 
