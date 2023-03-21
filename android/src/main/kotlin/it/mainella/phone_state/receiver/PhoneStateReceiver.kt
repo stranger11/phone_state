@@ -30,7 +30,7 @@ open class PhoneStateReceiver : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context?, intent: Intent?) {
         try {
-            if (Build.BRAND == "Huawei") {
+            if (Build.MANUFACTURER == "Huawei") {
                 val intentService = Intent(context, MyCallService::class.java)
                 context?.startService(intentService)
             } else
