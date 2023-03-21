@@ -19,6 +19,16 @@ open class PhoneStateReceiver : BroadcastReceiver() {
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> PhoneStateStatus.CALL_STARTED
                 TelephonyManager.EXTRA_STATE_IDLE -> PhoneStateStatus.CALL_ENDED
                 else -> PhoneStateStatus.NOTHING
+
+            }
+            @RequiresApi(Build.VERSION_CODES.M)
+            object : Call.Callback() {
+                override fun onStateChanged(call: Call?, state: Int) {
+                    super.onStateChanged(call, state)
+                    if(state == Call.STATE_DISCONNECTED) {
+                        status = PhoneStateStatus.CALL_ENDED
+                    }
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
