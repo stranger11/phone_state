@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.telecom.Call
 import android.telephony.TelephonyManager
+import android.util.Log
 import androidx.annotation.RequiresApi
 import it.mainella.phone_state.utils.PhoneStateStatus
 
@@ -23,7 +24,7 @@ open class PhoneStateReceiver : BroadcastReceiver() {
             object : Call.Callback() {
                 override fun onStateChanged(call: Call?, state: Int) {
                     super.onStateChanged(call, state)
-                    println("PROF CALL STATE $state - ${call.toString()}")
+                    Log.d("PROF CALL STATE", "$state - ${call.toString()}")
                 }
             }
 
