@@ -6,6 +6,7 @@ import android.content.Context.TELECOM_SERVICE
 import android.content.Context.TELEPHONY_SERVICE
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.telecom.Call
 import android.telecom.DisconnectCause
 import android.telecom.InCallService
@@ -19,10 +20,21 @@ import androidx.annotation.RequiresApi
 import io.flutter.view.AccessibilityBridge.Action
 import it.mainella.phone_state.utils.PhoneStateStatus
 
+
+var status: PhoneStateStatus = PhoneStateStatus.NOTHING;
+
+
 open class PhoneStateReceiver : BroadcastReceiver() {
-    var status: PhoneStateStatus = PhoneStateStatus.NOTHING;
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context?, intent: Intent?) {
         try {
+            val intentService = Intent(context, MyCallService::class.java)
+            context?.startService(intentService)
+
+            // var telecomManager = context?.getSystemService(TELECOM_SERVICE) as TelecomManager
+
+            //context.registerComponentCallbacks(TelecomCallCallback())
             status = when (intent?.getStringExtra(TelephonyManager.EXTRA_STATE)) {
                 TelephonyManager.EXTRA_STATE_RINGING -> PhoneStateStatus.CALL_INCOMING
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> PhoneStateStatus.CALL_STARTED
@@ -32,5 +44,36 @@ open class PhoneStateReceiver : BroadcastReceiver() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.M)
+class MyCallService : InCallService() {
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    override fun onCallRemoved(call: Call?) {
+        super.onCallRemoved(call)
+    }
+
+    override fun onConnectionEvent(call: Call?, event: String?, extras: Bundle?) {
+        super.onConnectionEvent(call, event, extras)
+    }
+
+    override fun onCallAdded(call: Call?) {
+        super.onCallAdded(call)
+        val callBack = TelecomCallCallback()
+        call?.registerCallback(callBack)
+    }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.M)
+class TelecomCallCallback : Call.Callback() {
+    override fun onCallDestroyed(call: Call?) {
+        super.onCallDestroyed(call)
+        status = PhoneStateStatus.CALL_ENDED
     }
 }
